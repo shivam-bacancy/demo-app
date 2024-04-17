@@ -22,9 +22,7 @@ const educationSchema = Yup.object().shape({
     .transform((v) => (v instanceof Date && !isNaN(v) ? v : null))
     .when("startDate", (dates, schema) => {
       if (!Yup.ref("endDate") || dates[0] === null) return schema;
-      return schema
-        .min(dates[0], "End date must be greater than start date")
-        .required();
+      return schema.min(dates[0], "End date must be greater than start date");
     })
     .optional(),
 });
@@ -61,7 +59,7 @@ function UserForm() {
       <PageHeader
         title="User Form"
         rightElement={
-          <Link to={"/user-details"}>
+          <Link to={"/books"}>
             <Button variant="contained">Go To Books</Button>
           </Link>
         }
@@ -105,7 +103,7 @@ function UserForm() {
             append={append}
           />
 
-          <Button type="submit" variant="contained" disabled={!isValid}>
+          <Button type="submit" variant="contained">
             Submit
           </Button>
         </Box>
