@@ -2,7 +2,6 @@ import { FieldError, FieldPath, UseFormRegister } from "react-hook-form";
 import { UserDetails } from "../../types/UserFormTypes";
 import { TextField } from "@mui/material";
 import { HTMLInputTypeAttribute } from "react";
-// import { DateField } from "@mui/x-date-pickers";
 
 function TextInput({
   label,
@@ -24,7 +23,8 @@ function TextInput({
       fullWidth={fullWidth}
       {...register(name)}
       variant="outlined"
-      label={type === "date" ? "" : label}
+      {...(type === "date" && { InputLabelProps: { shrink: true } })}
+      label={label}
       type={type}
       error={Boolean(error?.message)}
       helperText={error?.message}

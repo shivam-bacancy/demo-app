@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, FormHelperText } from "@mui/material";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,13 +9,13 @@ import PageHeader from "../components/common/PageHeader";
 import { Link } from "react-router-dom";
 
 const educationSchema = Yup.object().shape({
-  schoolName: Yup.string().required("School name is required"),
-  degree: Yup.string().required("Degree is required"),
+  schoolName: Yup.string().trim().required("School name is required"),
+  degree: Yup.string().trim().required("Degree is required"),
   description: Yup.string().optional(),
   startDate: Yup.date()
     .required("Start date is required")
     .typeError("Invalid Date")
-    .transform((v) => (!isNaN(v) ? v : null)),
+    .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
   endDate: Yup.date()
     .nullable()
     .typeError("Invalid Date")
@@ -26,13 +26,16 @@ const educationSchema = Yup.object().shape({
     })
     .optional(),
 });
+
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  email: Yup.string().email().required("Email is required"),
+  name: Yup.string().trim().required("Name is required"),
+  email: Yup.string().trim().email().required("Email is required"),
   age: Yup.number()
     .optional()
     .transform((v) => (v instanceof Number && !isNaN(v) ? v : undefined)),
-  educations: Yup.array(educationSchema).required("Educations are required"),
+  educations: Yup.array(educationSchema)
+    .min(1, "Atleast one education record is required")
+    .required("Atleast one education is required"),
 });
 
 function UserForm() {
@@ -42,6 +45,7 @@ function UserForm() {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<UserDetails>({
+    mode: "all",
     defaultValues: {
       educations: [{}],
     },
@@ -102,8 +106,11 @@ function UserForm() {
             remove={remove}
             append={append}
           />
+          {errors.educations?.message !== undefined && (
+            <FormHelperText error>{errors.educations.message}</FormHelperText>
+          )}
 
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" disabled={!isValid}>
             Submit
           </Button>
         </Box>

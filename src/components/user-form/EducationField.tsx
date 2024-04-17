@@ -29,7 +29,12 @@ const EducationFields = ({
         <Typography variant="h6">Educations</Typography>
         <Button
           onClick={() =>
-            append({ schoolName: "", degree: "", startDate: new Date() })
+            append({
+              schoolName: "",
+              degree: "",
+              startDate: new Date(),
+              endDate: null,
+            })
           }
           variant="contained"
         >

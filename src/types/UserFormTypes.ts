@@ -3,7 +3,7 @@ export type Education = {
   degree: string;
   description?: string;
   startDate: Date;
-  endDate?: Date;
+  endDate?: Date | null;
 };
 export type UserDetails = {
   name: string;
