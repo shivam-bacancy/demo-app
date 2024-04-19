@@ -2,6 +2,7 @@ import { Box, Button, Rating, TextField, Typography } from "@mui/material";
 import useGetBooksData, { MIN_TEXT_SEARCH } from "../services/useGetBooksData";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
+import SyncIcon from "@mui/icons-material/Sync";
 import { Book } from "../api/type";
 import PageHeader from "../components/common/PageHeader";
 import { Link } from "react-router-dom";
@@ -35,7 +36,7 @@ function BooksPage() {
       <PageHeader
         title="Books"
         rightElement={
-          <Link to={"/user-details"}>
+          <Link to={"/user-details"} replace>
             <Button variant="contained">Go To Form</Button>
           </Link>
         }
@@ -47,7 +48,15 @@ function BooksPage() {
         variant="outlined"
         placeholder="Harry Potter, J.K. Rowling ...."
         InputProps={{
-          startAdornment: <SearchIcon color="disabled" />,
+          startAdornment:
+            isLoading || isFetching ? (
+              <SyncIcon
+                color="disabled"
+                sx={{ animation: "rotation 2s infinite linear", mr: 1 }}
+              />
+            ) : (
+              <SearchIcon color="disabled" sx={{ pr: 1 }} />
+            ),
         }}
         value={query}
         onChange={(e) => handleSearchQueryChange(e.target.value)}
@@ -58,23 +67,7 @@ function BooksPage() {
         }
         sx={{ pb: 2 }}
       />
-      {query.length < MIN_TEXT_SEARCH && !data && (
-        <Box textAlign={"center"}>
-          <Typography variant="h6" fontStyle={"italic"}>
-            <Typography
-              variant="h6"
-              fontStyle={"italic"}
-              fontWeight={600}
-              component={"span"}
-              mr={1}
-            >
-              Start typing!
-            </Typography>
-            Explore endless possibilities in the world of literature.
-          </Typography>
-        </Box>
-      )}
-      {data && (
+      {data ? (
         <Box>
           <Typography variant="subtitle1">
             Showing search results for "
@@ -102,6 +95,29 @@ function BooksPage() {
             onPaginationModelChange={setPaginationModel}
           />
         </Box>
+      ) : query.length < MIN_TEXT_SEARCH ? (
+        <Box textAlign={"center"}>
+          <Typography variant="h6" fontStyle={"italic"}>
+            <Typography
+              variant="h6"
+              fontStyle={"italic"}
+              fontWeight={600}
+              component={"span"}
+              mr={1}
+            >
+              Start typing!
+            </Typography>
+            Explore endless possibilities in the world of literature.
+          </Typography>
+        </Box>
+      ) : (
+        isLoading && (
+          <Box textAlign={"center"}>
+            <Typography variant="h6" fontStyle={"italic"}>
+              Searching...
+            </Typography>
+          </Box>
+        )
       )}
     </Box>
   );

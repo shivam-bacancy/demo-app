@@ -15,11 +15,15 @@ const educationSchema = Yup.object().shape({
   startDate: Yup.date()
     .required("Start date is required")
     .typeError("Invalid Date")
-    .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
+    .transform((v: Date | undefined) =>
+      v instanceof Date && !isNaN(v.valueOf()) ? v : null
+    ),
   endDate: Yup.date()
     .nullable()
     .typeError("Invalid Date")
-    .transform((v) => (v instanceof Date && !isNaN(v) ? v : null))
+    .transform((v: Date | undefined) =>
+      v instanceof Date && !isNaN(v.valueOf()) ? v : null
+    )
     .when("startDate", (dates, schema) => {
       if (!Yup.ref("endDate") || dates[0] === null) return schema;
       return schema.min(dates[0], "End date must be greater than start date");
@@ -32,10 +36,12 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().trim().email().required("Email is required"),
   age: Yup.number()
     .optional()
-    .transform((v) => (v instanceof Number && !isNaN(v) ? v : undefined)),
+    .transform((v: number | undefined) =>
+      typeof v === "number" && !isNaN(v) ? v : undefined
+    ),
   educations: Yup.array(educationSchema)
-    .min(1, "Atleast one education record is required")
-    .required("Atleast one education is required"),
+    .min(1, "At least one education record is required")
+    .required("At least one education is required"),
 });
 
 function UserForm() {
@@ -63,7 +69,7 @@ function UserForm() {
       <PageHeader
         title="User Form"
         rightElement={
-          <Link to={"/books"}>
+          <Link to={"/books"} replace>
             <Button variant="contained">Go To Books</Button>
           </Link>
         }
@@ -78,14 +84,14 @@ function UserForm() {
         >
           <TextInput
             fullWidth
-            label="Name"
+            label="* Name"
             register={register}
             name={`name`}
             error={errors.name}
           />
           <TextInput
             fullWidth
-            label="Email"
+            label="* Email"
             register={register}
             name={`email`}
             error={errors.email}

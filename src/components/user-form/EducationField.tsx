@@ -8,7 +8,7 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import { UserDetails } from "../../types/UserFormTypes";
-import { Delete } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 
 const EducationFields = ({
   fields,
@@ -37,8 +37,9 @@ const EducationFields = ({
             })
           }
           variant="contained"
+          startIcon={<Add />}
         >
-          + Add Education
+          Add Education
         </Button>
       </Box>
       {fields.map((field, index) => {
@@ -57,7 +58,7 @@ const EducationFields = ({
               <Grid item xs={4}>
                 <TextInput
                   fullWidth
-                  label="School Name"
+                  label="* School Name"
                   register={register}
                   name={`educations.${index}.schoolName`}
                   error={errors?.[index]?.schoolName}
@@ -66,7 +67,7 @@ const EducationFields = ({
               <Grid item xs={4}>
                 <TextInput
                   fullWidth
-                  label="Degree"
+                  label="* Degree"
                   register={register}
                   name={`educations.${index}.degree`}
                   error={errors?.[index]?.degree}
@@ -84,7 +85,7 @@ const EducationFields = ({
               <Grid item xs={4}>
                 <TextInput
                   fullWidth
-                  label="Start Date"
+                  label="* Start Date"
                   register={register}
                   name={`educations.${index}.startDate`}
                   error={errors?.[index]?.startDate}
